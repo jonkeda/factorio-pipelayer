@@ -544,8 +544,17 @@ local function on_player_deconstructed_area(self, player, area, tool)
   end
 end
 
+local function checkIfNeedToDeconstruct(event)
+  local player = game.players[event.player_index]
+  if settings.get_player_settings(player)["pipelayer-deconstruct"].value == "alt-not-pressed" then
+      return event.alt
+  else
+    return not event.alt
+  end
+end
+
 function Editor:on_player_deconstructed_area(event)
-  if event.alt then return end
+  if checkIfNeedToDeconstruct(event) then return end
   local player = game.players[event.player_index]
   on_player_deconstructed_area(self, player, event.area, player.cursor_stack)
 end
@@ -578,6 +587,15 @@ local function is_output_connector(entity)
   return entity and Connector.for_below_unit_number(entity.unit_number).mode == "output"
 end
 
+local function checkIfNeedToBlueprint(event)
+  local player = game.players[event.player_index]
+  if settings.get_player_settings(player)["pipelayer-blueprint"].value == "alt-not-pressed" then
+      return event.alt
+  else
+    return not event.alt
+  end
+end
+
 local function on_player_setup_aboveground_blueprint(self, event)
   local player = game.players[event.player_index]
   local surface = player.surface
@@ -590,7 +608,7 @@ local function on_player_setup_aboveground_blueprint(self, event)
     return
   end
 
-  local bp, bp_to_world = self:capture_underground_entities_in_blueprint(event)
+  local bp, bp_to_world = self:capture_underground_entities_in_blueprint(event, not checkIfNeedToBlueprint(event))
   local bp_entities = bp.get_blueprint_entities()
   if not bp_entities then return end
 
@@ -609,7 +627,7 @@ end
 
 function Editor:on_player_setup_blueprint(event)
   on_player_setup_aboveground_blueprint(self, event)
-  if event.item == "cut-paste-tool" and event.alt then
+  if event.item == "cut-paste-tool" and checkIfNeedToDeconstruct(event) then
     local player = game.players[event.player_index]
     on_player_deconstructed_area(self, player, event.area, nil)
   end

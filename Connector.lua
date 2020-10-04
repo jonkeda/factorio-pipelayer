@@ -56,6 +56,48 @@ function M.infer_mode_for_connectors(entity)
   end
 end
 
+function Connector:update_sprites()
+
+  if self.below_rendering then
+    rendering.destroy(self.below_rendering)
+    self.below_rendering = nil
+  end
+  if self.above_rendering then
+    rendering.destroy(self.above_rendering)
+    self.above_rendering = nil
+  end
+
+  local surface = self.entity.surface
+  local offset = self.entity.prototype.sticker_box.left_top
+
+  self.below_rendering = rendering.draw_sprite
+  {
+    sprite = "utility/fluid_indication_arrow",
+    target = self.entity,
+    target_offset = offset,
+    surface = surface,
+    --forces = {force},
+    only_in_alt_mode = true,
+    --target_offset = {0, -0.5},
+    x_scale = 0.6,
+    y_scale = 0.6,
+  }
+
+  self.above_rendering = rendering.draw_sprite
+  {
+    sprite = "utility/fluid_indication_arrow",
+    target = self.entity,
+    target_offset = offset,
+    surface = surface,
+    --forces = {force},
+    only_in_alt_mode = true,
+    --target_offset = {0, -0.5},
+    x_scale = 0.6,
+    y_scale = 0.6,
+  }
+
+end
+
 function Connector:valid()
   return self.entity.valid
 end

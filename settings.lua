@@ -5,7 +5,22 @@ data:extend{
     setting_type = "runtime-per-user",
     default_value = true,
   },
-
+  
+  {
+		type = "string-setting",
+		name = "pipelayer-blueprint",
+		setting_type = "runtime-per-user",
+		default_value = "alt-not-pressed",
+		allowed_values = {"alt-pressed", "alt-not-pressed"}
+  },
+  {
+		type = "string-setting",
+		name = "pipelayer-deconstruct",
+		setting_type = "runtime-per-user",
+		default_value = "alt-not-pressed",
+		allowed_values = {"alt-pressed", "alt-not-pressed"}
+  },
+  
   {
     type = "int-setting",
     name = "pipelayer-connector-capacity",
